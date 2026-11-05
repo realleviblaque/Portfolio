@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f2ec" />
+    <script>
+      (() => {
+        try {
+          const savedPreference = localStorage.getItem('levi-blaque-theme')
+          const preference = ['light', 'dark', 'system'].includes(savedPreference)
+            ? savedPreference
+            : 'system'
+          const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const theme = preference === 'system' ? (systemDark ? 'dark' : 'light') : preference
+          document.documentElement.dataset.theme = theme
+          document.documentElement.dataset.themePreference = preference
+        } catch {
+          document.documentElement.dataset.theme = 'light'
+          document.documentElement.dataset.themePreference = 'system'
+        }
+      })()
+    </script>
+    <meta name="description" content="The personal portfolio of Levi Blaque." />
+    <title>Levi Blaque - Personal Portfolio</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
