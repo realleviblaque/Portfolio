@@ -316,7 +316,10 @@ h2 { margin-bottom: 0; font-size: clamp(2rem, 4.3vw, 3.75rem); letter-spacing: -
 .admin-navigation a.active > span { color: var(--color-accent); }
 .admin-sidebar-bottom { display: grid; gap: 0.85rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--color-border); }
 .admin-public-link, .admin-logout-link { width: fit-content; color: var(--color-muted); font-size: 0.78rem; text-decoration: none; }
+.admin-logout-link { padding: 0; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
+.admin-logout-link:disabled { cursor: wait; opacity: 0.65; }
 .admin-public-link:hover, .admin-logout-link:hover { color: var(--color-accent); }
+.admin-auth-loading { min-height: 100vh; display: grid; place-items: center; padding: 2rem; color: var(--color-muted); background: var(--color-page); font-size: 0.9rem; }
 .admin-public-link span { color: var(--color-accent); }
 .admin-main-column { min-width: 0; }
 .admin-topbar { min-height: 5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem clamp(1.25rem, 4vw, 3.5rem); border-bottom: 1px solid var(--color-border); }

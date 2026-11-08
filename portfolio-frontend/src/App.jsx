@@ -16,6 +16,7 @@ import { AdminMessagesPage } from './pages/admin/AdminMessagesPage.jsx'
 import { AdminAboutPage } from './pages/admin/AdminAboutPage.jsx'
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage.jsx'
 import { AdminLoginPage } from './pages/admin/AdminLoginPage.jsx'
+import { AdminAuthProvider } from './context/AdminAuthContext.jsx'
 import './App.css'
 
 function App() {
@@ -32,15 +33,17 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
-          <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminOverviewPage />} />
-            <Route path="projects" element={<AdminProjectsPage />} />
-            <Route path="projects/new" element={<AdminProjectEditorPage />} />
-            <Route path="projects/:id/edit" element={<AdminProjectEditorPage />} />
-            <Route path="messages" element={<AdminMessagesPage />} />
-            <Route path="about" element={<AdminAboutPage />} />
-            <Route path="settings" element={<AdminSettingsPage />} />
+          <Route element={<AdminAuthProvider />}>
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminOverviewPage />} />
+              <Route path="projects" element={<AdminProjectsPage />} />
+              <Route path="projects/new" element={<AdminProjectEditorPage />} />
+              <Route path="projects/:id/edit" element={<AdminProjectEditorPage />} />
+              <Route path="messages" element={<AdminMessagesPage />} />
+              <Route path="about" element={<AdminAboutPage />} />
+              <Route path="settings" element={<AdminSettingsPage />} />
+            </Route>
           </Route>
         </Routes>
        </BrowserRouter>

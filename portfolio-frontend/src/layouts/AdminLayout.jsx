@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { NavLink, Outlet, Link } from 'react-router-dom'
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { ThemeSelect } from '../components/ThemeSelect.jsx'
-import { BackendNotice } from '../components/admin/AdminComponents.jsx'
+import { AdminFeedback } from '../components/admin/AdminComponents.jsx'
+import { useAdminAuth } from '../context/AdminAuthContext.jsx'
 
 const navigation = [
   { to: '/admin', label: 'Overview', end: true },
@@ -13,6 +14,30 @@ const navigation = [
 
 export function AdminLayout() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
+  const { status, admin, error, signOut } = useAdminAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  async function handleSignOut() {
+    if (signingOut) return
+    setSigningOut(true)
+    try {
+      await signOut()
+      navigate('/admin/login', { replace: true })
+    } catch {
+      // Keep the admin session UI in place so the owner can retry.
+    } finally {
+      setSigningOut(false)
+    }
+  }
+
+  if (status === 'loading' || status === 'authenticating') {
+    return <main className="admin-auth-loading" role="status" aria-live="polite">Verifying administrator session…</main>
+  }
+  if (status !== 'authenticated') {
+    return <Navigate to="/admin/login" replace state={{ from: location }} />
+  }
 
   return (
     <div className="admin-shell">
@@ -30,7 +55,9 @@ export function AdminLayout() {
         </nav>
         <div className="admin-sidebar-bottom">
           <Link to="/" className="admin-public-link">View public portfolio <span aria-hidden="true">↗</span></Link>
-          <Link to="/admin/login" className="admin-logout-link">Log out</Link>
+          <button type="button" className="admin-logout-link" onClick={handleSignOut} disabled={signingOut}>
+            {signingOut ? 'Signing out…' : 'Log out'}
+          </button>
         </div>
       </aside>
 
@@ -40,10 +67,10 @@ export function AdminLayout() {
             aria-controls="admin-navigation-panel" onClick={() => setMenuOpen((open) => !open)}>
             {menuOpen ? 'Close menu' : 'Menu'}
           </button>
-          <span className="admin-topbar-title">Admin dashboard</span>
+          <span className="admin-topbar-title">{admin?.name ? `Admin dashboard / ${admin.name}` : 'Admin dashboard'}</span>
           <ThemeSelect />
         </header>
-        <BackendNotice>Admin routes are not authenticated. Connect backend authentication before making this dashboard publicly available.</BackendNotice>
+        <AdminFeedback>{error}</AdminFeedback>
         <main className="admin-content" id="admin-content" tabIndex={-1}><Outlet /></main>
       </div>
     </div>
